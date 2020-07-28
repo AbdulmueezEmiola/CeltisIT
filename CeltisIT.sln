@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CeltisIT", "CeltisIT\CeltisIT.csproj", "{BEB235E8-CB30-40FD-B09E-0B1EDBA2FDBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CeltisITUI", "CeltisITUI\CeltisITUI.csproj", "{21467F0E-63FF-4AA7-8F83-81FF1D91ECBE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BEB235E8-CB30-40FD-B09E-0B1EDBA2FDBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEB235E8-CB30-40FD-B09E-0B1EDBA2FDBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEB235E8-CB30-40FD-B09E-0B1EDBA2FDBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEB235E8-CB30-40FD-B09E-0B1EDBA2FDBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21467F0E-63FF-4AA7-8F83-81FF1D91ECBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21467F0E-63FF-4AA7-8F83-81FF1D91ECBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21467F0E-63FF-4AA7-8F83-81FF1D91ECBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21467F0E-63FF-4AA7-8F83-81FF1D91ECBE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {45743566-FB36-4AC4-8C26-FE89F892655E}
+	EndGlobalSection
+EndGlobal

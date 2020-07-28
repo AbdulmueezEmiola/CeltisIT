@@ -1,0 +1,54 @@
+﻿@using CeltisITUI.Model;
+@model CeltisITUI.Model.Order
+@{
+    ViewData["Title"] = "Specific";
+    Layout = "_Layout";
+}
+<table class="table table-bordered" style="border-color:black">
+    <tr class="table-active" style="border-color:black">
+        <td rowspan="2" style="border-color:black; vertical-align:middle;width:70%">Customer : <strong>@Model.Cust.Custname</strong></td>
+        <td style="border-color:black">Sales order: <strong>@Model.Sordid</strong></td>
+    </tr>
+    <tr class="table-active">
+        <td style="border-color:black">Order Date: <strong>@Model.Date</strong></td>
+    </tr>
+</table>
+<table class="table table-bordered" style="border-color:black">
+    <thead>
+        <tr class="table-active" style="border-color:black;text-align:center">
+            <th scope="col" style="border-color:black">SL</th>
+            <th scope="col" style="border-color:black">ITEM</th>
+            <th scope="col" style="border-color:black">RATE</th>
+            <th scope="col" style="border-color:black">III</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(OrderData order in Model.Tabsodata)
+        {
+            <tr style="border-color:black">
+                <td style="border-color:black;text-align:center">
+                    @order.Item.ItemId
+                </td>
+                <td style="border-color:black">
+                    @order.Item.Title
+                </td>
+                <td  style="border-color:black;text-align:right">
+                    @order.Item.Rate
+                </td>
+                <td style="border-color:black">
+                    <div style="color:gray;text-align:center">
+                        <i class="fas fa-pen"></i>
+                        <i class="far fa-times-circle" style="color:gray"></i>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr class="table-active">
+            <td colspan="2" style="border-color:black;text-align:center">Total</td>
+            <td style="border-color:black;text-align:right">@Model.Sordamnt</td>
+            <td style="border-color:black"></td>
+        </tr>
+    </tfoot>
+</table>

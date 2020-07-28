@@ -1,0 +1,159 @@
+﻿@model IEnumerable<CeltisITUI.Model.Order>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_Layout";
+}
+<form>
+    <table class="table table-borderless" style="border-spacing:0 10px; border-collapse:separate" id="myTable">
+        <thead>
+            <tr class="table-dark text-black-50">
+
+                <th scope="col" class="text-primary">
+                    <span onclick="sortNumber1('0'); highlightRow()" style="display:block">Sales Order<i class="fas fa-sort-amount-down float-right"></i></span>
+                    <div>
+                        <input type="search" id="myInput" onkeyup="filter('#myInput','0')" class="form-control" />
+                    </div>
+                </th>
+                <th scope="col">
+                    <span onclick="sort1('1'); highlightRow()" style="display:block">
+                        Customer<i class="fas fa-sort-amount-up float-right"></i>
+                    </span>
+                    <div>
+                        <input type="search" id="myInput2" onkeyup="filter('#myInput2','1')" class="form-control" />
+                    </div>
+                </th>
+                <th scope="col">
+                    <span onclick="sortDate1('2'); highlightRow()" style="display:block">
+                        Order Date
+                        <i class="fas fa-sort-amount-up float-right"></i>
+                    </span>
+                    <div class="input-group">
+                        <input type="text" id="myInput3" onkeyup="filter2('#myInput3','2')" class="form-control border-right-0" data-provide="datepicker" />
+                        <div class="input-group-append border-left-0">
+                            <span class="input-group-text bg-white border-left-0">
+                                <i class="fas fa-calendar-alt bg-white input-group-append border-left-0"></i>
+                            </span>
+                        </div>
+                    </div>
+                </th>
+                <th scope="col">
+                    <span onclick="sortNumber1('3'); highlightRow()" style="display:block">
+                        Amount
+                        <i class="fas fa-sort-amount-up float-right"></i>
+                    </span>
+                    <div>
+                        <input type="search" id="myInput4" onkeyup="filter('#myInput4','3')" class="form-control" />
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="bg-light filter">
+                    <td scope="row" class="text-primary pl-5">
+                        <a style="text-decoration:underline;" asp-controller="Order" asp-action="Specific" asp-route-id="@item.Sordid">@Html.DisplayFor(modelItem => item.Sordid)</a>
+                    </td>
+                    <td class="pl-5">
+                        @Html.DisplayFor(modelItem => item.Cust.Custname)
+                    </td>
+                    <td class="pl-5">
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td class="pl-5">
+                        @Html.DisplayFor(modelItem => item.Sordamnt)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</form>
+
+<script>
+    function filter(pos, val) {
+        var value = $(pos).val().toLowerCase();
+        $(".filter").filter(function () {
+            $(this).toggle($(this).children(':eq(' + val + ')').text().toLowerCase().indexOf(value) > -1)
+        });
+    };
+    function filter2(pos, val) {
+        var value = new Date($(pos).val());
+        $(".filter").filter(function () {
+            var tableDate = new Date($(this).children(':eq(' + val + ')').text());
+            var toggleCheck = value.getTime() === tableDate.getTime();
+            if (value.getTime() === value.getTime()) {
+                $(this).toggle(toggleCheck);
+            } else {
+                $(this).show();
+            }
+        });
+    }
+    $(function () {
+        $('#myInput3').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            format: "mm/dd/yyyy",
+            language: "tr"
+        });
+    });
+    function sort1(val) {
+        var $tbody = $('table tbody');
+        $tbody.find('tr').sort(function (a, b) {
+            var tda = $(a).find('td:eq(' + val + ')').text();
+            var tdb = $(b).find('td:eq(' + val + ')').text();
+            // if a < b return 1
+            return tda < tdb ? 1
+                // else if a > b return -1
+                :
+                tda > tdb ? -1
+                    // else they are equal - return 0
+                    :
+                    0;
+        }).appendTo($tbody)
+    };
+    function sortNumber1(val) {
+        var $tbody = $('table tbody');
+        $tbody.find('tr').sort(function (a, b) {
+            var tda = new Number($(a).find('td:eq(' + val + ')').text());
+            var tdb = new Number($(b).find('td:eq(' + val + ')').text());
+            // if a < b return 1
+            return tda < tdb ? 1
+                // else if a > b return -1
+                :
+                tda > tdb ? -1
+                    // else they are equal - return 0
+                    :
+                    0;
+        }).appendTo($tbody)
+    }
+    function sortDate1(val) {
+        var $tbody = $('table tbody');
+        $tbody.find('tr').sort(function (a, b) {
+            var strDate = $(a).find('td:eq(' + val + ')').text();
+            var dateParts = strDate.split("/");
+            var date = new Date(dateParts[2], (dateParts[0]), dateParts[1]);
+            var tda = date.getTime();
+            strDate = $(b).find('td:eq(' + val + ')').text();
+            dateParts = strDate.split("/");
+            date = new Date(dateParts[2], (dateParts[0]), dateParts[1]);
+            var tdb = date.getTime();
+            return tda < tdb ? 1
+                // else if a > b return -1
+                :
+                tda > tdb ? -1
+                    // else they are equal - return 0
+                    :
+                    0;
+        }).appendTo($tbody)
+    }
+    function highlightRow() {
+        var rows = $('table tr');
+        rows.children().click(function () {
+            rows.children().removeClass('text-primary');
+            var index = $(this).prevAll().length;
+            $(".table tr > :nth-child(" + (index + 1) + ")").addClass('text-primary')
+        });
+    }
+</script>

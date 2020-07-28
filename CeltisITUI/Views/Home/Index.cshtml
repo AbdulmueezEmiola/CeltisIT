@@ -1,0 +1,172 @@
+﻿@model CeltisITUI.Model.ViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_Layout";
+}
+
+<div class="border-bottom p-3">
+    <h3 style="display:inline-block">Items</h3>
+    <button type="button" class="btn float-right border bg-light dropdown-toggle" data-toggle="modal" data-target="#myModal">
+        <i class="fa fa-plus-circle"></i>Add Item
+    </button>
+</div>
+<br />
+<form asp-controller="Home" asp-action="Index" class="form-group">
+    <select name="pageSize" class="custom-select col-1 mx-2 my-2 bg-light">
+        @foreach (var a in Enumerable.Range(1, 10).ToList())
+        {
+            if (a == Model.PagingInfo.ItemsPerPage)
+            {
+                <option selected="selected">@a</option>
+                continue;
+            }
+            <option>@a</option>
+        }
+    </select>
+    <div class="input-group col-2 my-2 float-right">
+        <input class="form-control py-2 border-right-0 border" type="search" placeholder="search" value="@ViewData["Search"]" name="searchString" ">
+        <span class="input-group-append">
+            <button type="submit" class="enter input-group-text bg-transparent"><i class="fa fa-search"></i></button>
+        </span>
+    </div>
+    <div class="input-group col-2 my-2 float-right">
+        <input class="form-control" type="button" id="excel" value="Excel" onclick="exportTableToExcel('table')" />
+        <input class="form-control" type="button" id="print" value="Print" onclick="Export()" />
+    </div>
+
+    <table class="table table-bordered" id="table">
+        <thead>
+            <tr>
+                <th scope="col">
+                    Title
+                </th>
+                <th scope="col">
+                    Description
+                </th>
+                <th scope="col">
+                    UnitType
+                </th>
+                <th scope="col">
+                    Rate
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rate)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @{
+        var prevDisabled = !Model.PagingInfo.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.PagingInfo.HasNextPage ? "disabled" : "";
+        
+    }
+
+    <span class="ml-2 text-black-50">
+        @Model.PagingInfo.itemFirst-@Model.PagingInfo.itemLast/@Model.PagingInfo.TotalItems
+    </span>
+    <span class="float-right mr-2">
+        <button type="submit" value="@(Model.PagingInfo.CurrentPage-1)" name="itemPage" class="btn btn-default @prevDisabled border"><<</button>
+        <span class="p-2">
+            @Model.PagingInfo.CurrentPage
+        </span>
+        <button type="submit" value="@(Model.PagingInfo.CurrentPage+1)" name="itemPage" class="btn btn-default @prevDisabled border">>></button>        
+    </span>
+</form>
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <form action="@Url.Action("Add","Home")" id="addForm" class="modal-content" method="post">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Item</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <br />
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label asp-for="Title" class="col-sm-3 col-form-label">Title</label>
+                    <input name="Title" class="form-control col-sm-8" placeholder="Title" />
+                </div>
+                <div class="form-group row">
+                    <label asp-for="Description" class="col-sm-3 col-form-label">Description</label>
+                    <input name="Description" class="form-control col-sm-8" placeholder="Description" />
+                </div>
+                <div class="form-group row">
+                    <label asp-for="UnitType" class="col-sm-3 col-form-label">Unit type</label>
+                    <input name="UnitType" class="form-control col-sm-8" placeholder="UnitType" />
+                </div>
+                <div class="form-group row">
+                    <label asp-for="Rate" class="col-sm-3 col-form-label">Rate</label>
+                    <input name="Rate" class="form-control col-sm-8" placeholder="Rate" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default border" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function Export() {
+        html2canvas(document.getElementById('table'), {
+            onrendered: function (canvas) {
+                var data = canvas.toDataURL();
+                var docDefinition = {
+                    content: [{
+                        image: data,
+                        width: 500
+                    }]
+                };
+                pdfMake.createPdf(docDefinition).download("Table.pdf");
+            }
+        });
+    }
+    function exportTableToExcel(tableID, filename = '') {
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+        // Specify file name
+        filename = filename ? filename + '.xls' : 'excel_data.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if (navigator.msSaveOrOpenBlob) {
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob(blob, filename);
+        } else {
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }
+</script>
